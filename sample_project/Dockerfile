@@ -1,18 +1,23 @@
-# Stage 1: Use Node.js for React app
+# Use official Node.js image
 FROM node:20-alpine
 
-# Set working directory
+# Set working directory inside container
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files first for caching
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the app
+# Copy all project files
 COPY . .
 
-# Expose React dev server port
-EXPOSE 3000
+# Expose the default Vite dev server port
+EXPOSE 5173
 
-# Start React app
-CMD ["npm", "start"]
+# Let Vite listen on all interfaces (so it's reachable externally)
+ENV HOST=0.0.0.0
+
+# Start the Vite dev server
+CMD ["npm", "run", "dev"]
